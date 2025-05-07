@@ -145,9 +145,9 @@ int main() {
 
   // Crea un mapa para almacenar películas, utilizando una función de
   // comparación que trabaja con claves de tipo string.
-  HashMap *canciones_id = createMap(120000);
-  HashMap *canciones_genres = createMap(60000);
-  HashMap *canciones_artist = createMap(60000);
+  HashMap *canciones_id = createMap(160000);
+  HashMap *canciones_genres = createMap(80000);
+  HashMap *canciones_artist = createMap(80000);
   List *lista_lentas = create_List(); // Lista para almacenar canciones lentas
   List *lista_moderadas = create_List(); // Lista para almacenar canciones moderadas
   List *lista_rapidas = create_List(); // Lista para almacenar canciones rápidas
