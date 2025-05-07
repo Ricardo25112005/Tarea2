@@ -1,4 +1,5 @@
 #include "extra.h"
+#include "List.h"
 
 
 #define MAX_LINE_LENGTH 4096
@@ -64,7 +65,7 @@ char **leer_linea_csv(FILE *archivo, char separador) {
 
 
 List *split_string(const char *str, const char *delim) {
-  List *result = list_create();
+  List *result = create_List();
   char *token = strtok((char *)str, delim);
 
   while (token != NULL) {
@@ -84,20 +85,11 @@ List *split_string(const char *str, const char *delim) {
     char *new_token = strdup(token);
 
     // Agregar el nuevo string a la lista
-    list_pushBack(result, new_token);
+    push_back(result, new_token);
 
     // Obtener el siguiente token
     token = strtok(NULL, delim);
   }
 
   return result;
-}
-
-// Función para limpiar la pantalla
-void limpiarPantalla() { system("clear"); }
-
-void presioneTeclaParaContinuar() {
-  puts("Presione una tecla para continuar...");
-  getchar(); // Consume el '\n' del buffer de entrada
-  getchar(); // Espera a que el usuario presione una tecla
 }
