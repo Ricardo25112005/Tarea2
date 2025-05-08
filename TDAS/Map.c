@@ -136,3 +136,20 @@ Pair * nextMap(HashMap * map) {
     }
     return NULL;
 }
+
+void map_clean(HashMap *map) {
+    if (map == NULL) return;
+    for (long i = 0; i < map->capacity; i++) {
+        if (map->buckets[i] != NULL) {
+            if (map->buckets[i]->key != NULL) {
+                free(map->buckets[i]->key);
+            }
+            if (map->buckets[i]->value != NULL) {
+                free(map->buckets[i]->value);
+            }
+            free(map->buckets[i]);
+        }
+    }
+    free(map->buckets);
+    free(map);
+}
