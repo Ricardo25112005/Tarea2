@@ -9,7 +9,7 @@
 #include "TDAS/Extra.h"
 #define MAX_LINE 
 
-//codigo para ejecutar el programa.    gcc -o tarea1 main.c list.c 
+//codigo para ejecutar el programa.    gcc -o tarea2 main.c TDAS/List.c TDAS/Map.c TDAS/Extra.c 
 typedef struct {
   char id[50];           
   List *artists;
@@ -43,7 +43,6 @@ void mostrarMenuPrincipal() {
 }
 
 void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap *canciones_artist, List *lista_lentas, List *lista_moderadas, List *lista_rapidas) {
-  // Intenta abrir el archivo CSV que contiene datos de películas
   FILE *archivo = fopen("Data/song_dataset_.csv", "r");
   if (archivo == NULL) {
     perror(
@@ -60,21 +59,17 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
   while ((campos = leer_linea_csv(archivo, ',')) != NULL) {
     //k++;
     //if (k == 1000) break; // Salta la primera línea (encabezados)
-    // Crea una nueva estructura Film y almacena los datos de cada película
-    tipoCancion *Cancion = (tipoCancion *)malloc(sizeof(tipoCancion));
-    strcpy(Cancion->id, campos[1]);        // Asigna ID
-    strcpy(Cancion->album_name, campos[3]);     // Asigna título
-    strcpy(Cancion->track_name, campos[4]); // Asigna director
-    strcpy(Cancion->track_genre, campos[20]); // Asigna director
-    Cancion->artists = split_string(campos[2], ";");       // Inicializa la lista de géneros
-    Cancion->tempo = atoi(campos[18]); // Asigna año, convirtiendo de cadena a entero
-
     
-    // Inserta la película en el mapa usando el ID como clave
+    tipoCancion *Cancion = (tipoCancion *)malloc(sizeof(tipoCancion));
+    strcpy(Cancion->id, campos[1]);       
+    strcpy(Cancion->album_name, campos[3]);     
+    strcpy(Cancion->track_name, campos[4]); 
+    strcpy(Cancion->track_genre, campos[20]); 
+    Cancion->artists = split_string(campos[2], ";");       
+    Cancion->tempo = atoi(campos[18]); 
+
     insertMap(canciones_id, Cancion->id, Cancion);
 
-    // Código generado con ayuda de chatgpt3.5
-    // conversación: https://chat.openai.com/share/5f0643ad-e8f5-4fb7-a0fa-2d2f92408429
     
     // Obtiener el genero de la canción
     Pair *genre_pair = searchMap(canciones_genres, Cancion->track_genre);
@@ -93,9 +88,9 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
     if (artist == NULL) {
       puts("error al leer artistas"); // Si no hay artistas, salta al siguiente
     }
-    // Itera sobre cada género de la película
+    
     while (artist != NULL) {
-        // Busca el género en el mapa pelis_bygenres
+        
         Pair *artist_pair = searchMap(canciones_artist, artist);
         if (artist_pair == NULL) {
             List *nueva_list = create_List();
@@ -106,9 +101,10 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
             push_back(artist_list, Cancion);
         }
 
-        // Avanza al siguiente género en la lista
+        
         artist = list_next(Cancion->artists);
     }
+
     if (Cancion->tempo < 60) {
       push_back(lista_lentas, Cancion); // Agrega a la lista de lentas
     } else if (Cancion->tempo >= 60 && Cancion->tempo <= 120) {
@@ -192,13 +188,11 @@ void buscar_artista(HashMap *canciones_artist) {
       for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
-      printf("\n");
       cancion = list_next(lista); // Avanza al siguiente elemento en la lista
     }
   } else {
     puts("No se encontró ninguna canción de ese artista.");
   }
-  presioneTeclaParaContinuar();
 }
 
 void buscar_tempo(List *lista_lentas, List *lista_moderadas, List *lista_rapidas) {
@@ -255,8 +249,6 @@ int main() {
   char opcion; // Variable para almacenar una opción ingresada por el usuario
   // (sin uso en este fragmento)
 
-  // Crea un mapa para almacenar películas, utilizando una función de
-  // comparación que trabaja con claves de tipo string.
   HashMap *canciones_id = createMap(160000);
   HashMap *canciones_genres = createMap(160000);
   HashMap *canciones_artist = createMap(160000);
