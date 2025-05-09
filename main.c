@@ -7,7 +7,6 @@
 #include "TDAS/List.h"
 #include "TDAS/Map.h"
 #include "TDAS/Extra.h"
-#define MAX_LINE 
 
 //codigo para ejecutar el programa.    gcc -o tarea2 main.c TDAS/List.c TDAS/Map.c TDAS/Extra.c 
 typedef struct {
@@ -49,7 +48,6 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
         "Error al abrir el archivo"); // Informa si el archivo no puede abrirse
     return;
   }
-
   char **campos;
   // Leer y parsear una línea del archivo CSV. La función devuelve un array de
   // strings, donde cada elemento representa un campo de la línea CSV procesada.
@@ -83,25 +81,17 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
       List *genre_list = (List *)genre_pair->value;
       list_pushBack(genre_list, Cancion);
     }
-
     char *artist = list_first(Cancion->artists);
-    /*if (artist == NULL) {
-      puts("error al leer artistas"); // Si no hay artistas, salta al siguiente
-    }*/
-    
     while (artist != NULL) {
-        
         Pair *artist_pair = searchMap(canciones_artist, artist);
         if (artist_pair == NULL) {
             List *nueva_list = list_create();
             list_pushBack(nueva_list, Cancion);
-            insertMap(canciones_artist, artist, nueva_list);
+            insertMap(canciones_artist, strdup(artist), nueva_list);
         } else {
             List *artist_list = (List *)artist_pair->value;
             list_pushBack(artist_list, Cancion);
         }
-
-        
         artist = list_next(Cancion->artists);
     }
 
@@ -113,6 +103,7 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
       list_pushBack(lista_rapidas, Cancion); // Agrega a la lista de rápidas
     }
   }
+  puts("Se han cargado las canciones correctamente.");
   fclose(archivo); // Cierra el archivo después de leer todas las líneas
 
 
@@ -129,7 +120,6 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
     
     pair = nextMap(canciones_id); // Avanza al siguiente par en el mapa
   }*/
-  puts("Se han cargado las canciones correctamente.");
 }
 
 void buscar_id(HashMap *canciones_id) {
@@ -176,17 +166,17 @@ void buscar_genero(HashMap *canciones_genres) {
 void buscar_artista(HashMap *canciones_artist) {
   char artista[50];
   printf("Ingrese el artista: ");
-  scanf("%s[^/n]", artista);
+  scanf(" %[^\n]50s", artista);
   puts("Canciones encontradas:");
-  Pair *pair = searchMap(canciones_artist, artista);
+  Pair *pair = searchMap(canciones_artist, strdup(artista));
   if (pair != NULL) {
     List *lista = (List *)pair->value;
     tipoCancion *cancion = list_first(lista);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
-        printf("%s    ", artista);
+      for(char *artista = (char *)list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+        printf("%s", artista);
       }
       cancion = list_next(lista); // Avanza al siguiente elemento en la lista
     }
