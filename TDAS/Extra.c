@@ -65,7 +65,7 @@ char **leer_linea_csv(FILE *archivo, char separador) {
 
 
 List *split_string(const char *str, const char *delim) {
-  List *result = create_List();
+  List *result = list_create();
   char *token = strtok((char *)str, delim);
 
   while (token != NULL) {
@@ -85,7 +85,7 @@ List *split_string(const char *str, const char *delim) {
     char *new_token = strdup(token);
 
     // Agregar el nuevo string a la lista
-    push_back(result, new_token);
+    list_pushBack(result, new_token);
 
     // Obtener el siguiente token
     token = strtok(NULL, delim);

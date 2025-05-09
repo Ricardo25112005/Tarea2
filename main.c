@@ -13,10 +13,10 @@
 typedef struct {
   char id[50];           
   List *artists;
-  char album_name[121];  
-  char track_name[121];  
+  char album_name[201];  
+  char track_name[201];  
   int tempo;           
-  char track_genre[50];  
+  char track_genre[101];  
 } tipoCancion;
 
 void limpiarPantalla() { system("clear"); }
@@ -74,31 +74,31 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
     // Obtiener el genero de la canción
     Pair *genre_pair = searchMap(canciones_genres, Cancion->track_genre);
     if (genre_pair == NULL) {
-      List *new_list = create_List();
-      push_back(new_list, Cancion);
+      List *new_list = list_create();
+      list_pushBack(new_list, Cancion);
       insertMap(canciones_genres, Cancion->track_genre, new_list);
     }
     else {
       // Si el género ya existe en el mapa, obtén la lista y agrega la película
       List *genre_list = (List *)genre_pair->value;
-      push_back(genre_list, Cancion);
+      list_pushBack(genre_list, Cancion);
     }
 
-    char *artist = list_firts(Cancion->artists);
-    if (artist == NULL) {
+    char *artist = list_first(Cancion->artists);
+    /*if (artist == NULL) {
       puts("error al leer artistas"); // Si no hay artistas, salta al siguiente
-    }
+    }*/
     
     while (artist != NULL) {
         
         Pair *artist_pair = searchMap(canciones_artist, artist);
         if (artist_pair == NULL) {
-            List *nueva_list = create_List();
-            push_back(nueva_list, Cancion);
+            List *nueva_list = list_create();
+            list_pushBack(nueva_list, Cancion);
             insertMap(canciones_artist, artist, nueva_list);
         } else {
             List *artist_list = (List *)artist_pair->value;
-            push_back(artist_list, Cancion);
+            list_pushBack(artist_list, Cancion);
         }
 
         
@@ -106,11 +106,11 @@ void cargar_Canciones(HashMap *canciones_id, HashMap *canciones_genres, HashMap 
     }
 
     if (Cancion->tempo < 60) {
-      push_back(lista_lentas, Cancion); // Agrega a la lista de lentas
+      list_pushBack(lista_lentas, Cancion); // Agrega a la lista de lentas
     } else if (Cancion->tempo >= 60 && Cancion->tempo <= 120) {
-      push_back(lista_moderadas, Cancion); // Agrega a la lista de moderadas
+      list_pushBack(lista_moderadas, Cancion); // Agrega a la lista de moderadas
     } else {
-      push_back(lista_rapidas, Cancion); // Agrega a la lista de rápidas
+      list_pushBack(lista_rapidas, Cancion); // Agrega a la lista de rápidas
     }
   }
   fclose(archivo); // Cierra el archivo después de leer todas las líneas
@@ -141,7 +141,7 @@ void buscar_id(HashMap *canciones_id) {
     tipoCancion *cancion = pair->value;
     printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
     printf("Artista(s): ");
-    for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+    for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
       printf("%s    ", artista);
     }
     printf("\n");
@@ -158,11 +158,11 @@ void buscar_genero(HashMap *canciones_genres) {
   Pair *pair = searchMap(canciones_genres, genero);
   if (pair != NULL) {
     List *lista = (List *)pair->value;
-    tipoCancion *cancion = list_firts(lista);
+    tipoCancion *cancion = list_first(lista);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
       printf("\n");
@@ -176,16 +176,16 @@ void buscar_genero(HashMap *canciones_genres) {
 void buscar_artista(HashMap *canciones_artist) {
   char artista[50];
   printf("Ingrese el artista: ");
-  scanf("%s", artista);
+  scanf("%s[^/n]", artista);
   puts("Canciones encontradas:");
   Pair *pair = searchMap(canciones_artist, artista);
   if (pair != NULL) {
     List *lista = (List *)pair->value;
-    tipoCancion *cancion = list_firts(lista);
+    tipoCancion *cancion = list_first(lista);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
       cancion = list_next(lista); // Avanza al siguiente elemento en la lista
@@ -207,11 +207,11 @@ void buscar_tempo(List *lista_lentas, List *lista_moderadas, List *lista_rapidas
   }
   if (tempo_deseado == 1) {
     puts("Canciones lentas:");
-    tipoCancion *cancion = list_firts(lista_lentas);
+    tipoCancion *cancion = list_first(lista_lentas);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
       printf("\n");
@@ -219,11 +219,11 @@ void buscar_tempo(List *lista_lentas, List *lista_moderadas, List *lista_rapidas
     }
   } else if (tempo_deseado == 2) {
     puts("Canciones moderadas:");
-    tipoCancion *cancion = list_firts(lista_moderadas);
+    tipoCancion *cancion = list_first(lista_moderadas);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
       printf("\n");
@@ -232,11 +232,11 @@ void buscar_tempo(List *lista_lentas, List *lista_moderadas, List *lista_rapidas
 
   } else {
     puts("Canciones rápidas:");
-    tipoCancion *cancion = list_firts(lista_rapidas);
+    tipoCancion *cancion = list_first(lista_rapidas);
     while (cancion != NULL) {
       printf("ID: %s, Albun: %s, Titulo: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->tempo);
       printf("Artista(s): ");
-      for(char *artista = (char *) list_firts(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
+      for(char *artista = (char *) list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
         printf("%s    ", artista);
       }
       printf("\n");
@@ -252,9 +252,9 @@ int main() {
   HashMap *canciones_id = createMap(160000);
   HashMap *canciones_genres = createMap(160000);
   HashMap *canciones_artist = createMap(160000);
-  List *lista_lentas = create_List(); // Lista para almacenar canciones lentas
-  List *lista_moderadas = create_List(); // Lista para almacenar canciones moderadas
-  List *lista_rapidas = create_List(); // Lista para almacenar canciones rápidas
+  List *lista_lentas = list_create(); // Lista para almacenar canciones lentas
+  List *lista_moderadas = list_create(); // Lista para almacenar canciones moderadas
+  List *lista_rapidas = list_create(); // Lista para almacenar canciones rápidas
 
   // Recuerda usar un mapa por criterio de búsqueda
 
@@ -287,9 +287,9 @@ int main() {
   map_clean(canciones_id);
   map_clean(canciones_genres);
   //map_clean(canciones_artist);
-  cleanList(lista_lentas);
-  cleanList(lista_moderadas);
-  cleanList(lista_rapidas);
+  list_clean(lista_lentas);
+  list_clean(lista_moderadas);
+  list_clean(lista_rapidas);
   limpiarPantalla();
   puts("Gracias por usar el programa. ¡Hasta luego!");
   return 0;
