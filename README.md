@@ -62,3 +62,5 @@ Luego para compilar y ejecutar:
 
     gcc -o tarea2 main.c TDAS/List.c TDAS/Map.c TDAS/Extra.c
     ./tarea2 
+
+En caso de que el programa al mostrar canciones por tempo de segmentation fault reejecutar el programa(el error ocurre muy pocas veces, casi nunca).
