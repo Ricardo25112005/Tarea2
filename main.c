@@ -193,8 +193,9 @@ void buscar_artista(HashMap *canciones_artist) {
       printf("ID: %s, Álbum: %s, Titulo: %s, Género: %s, Tempo: %d\n", cancion->id, cancion->album_name, cancion->track_name, cancion->track_genre ,cancion->tempo);
       printf("Artista(s): ");
       for(char *artista = (char *)list_first(cancion->artists); artista != NULL; artista = list_next(cancion->artists)){
-        printf("%s", artista);
+        printf("%s   ", artista);
       }
+      printf("\n");
       cancion = list_next(lista); // Avanza al siguiente elemento en la lista
     }
     printf("\n");
@@ -308,10 +309,7 @@ int main() {
   presioneTeclaParaContinuar();
   } while (opcion != '6');
   
-  // Libera la memoria utilizada por los mapas
-  map_clean(canciones_id);
-  map_clean(canciones_genres);
-  map_clean(canciones_artist);
+  // Libera la memoria utilizada
   list_clean(lista_lentas);
   list_clean(lista_moderadas);
   list_clean(lista_rapidas);
